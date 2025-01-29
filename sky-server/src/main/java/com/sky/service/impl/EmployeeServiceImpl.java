@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.swing.text.Utilities;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.insert(employee);
     }
 
+    /**
+     * 员工分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
     @Override
     public PageResult page(EmployeePageQueryDTO employeePageQueryDTO) {
         System.out.println(employeePageQueryDTO);
@@ -113,10 +119,42 @@ public class EmployeeServiceImpl implements EmployeeService {
         return pageResult;
     }
 
+    /**
+     * 启用禁用员工账号
+     * @param status
+     * @param id
+     */
     @Override
     public void status(Integer status, Long id) {
 
         Employee employee = Employee.builder().status(status).id(id).build();
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据id查询员工信息
+     * @param id
+     * @return
+     */
+    @Override
+    public Employee employeeById(Long id) {
+        Employee employee = employeeMapper.employeeById(id);
+        // 给加密的密码处理一下
+        employee.setPassword("****");
+        return employee;
+    }
+
+    /**
+     * 编辑员工信息
+     * @param employeeDTO
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        //1.补全属性
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+        Long currentId = BaseContext.getCurrentId();
+        Employee.builder().updateTime(LocalDateTime.now()).updateUser(currentId).build();
         employeeMapper.update(employee);
     }
 

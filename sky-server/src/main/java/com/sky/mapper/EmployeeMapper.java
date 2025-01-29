@@ -31,11 +31,27 @@ public interface EmployeeMapper {
   void insert(Employee employee);
 
 
+  /**
+   * 员工分页查询
+   * @param employeePageQueryDTO
+   * @return
+   */
   Page<Employee> page(EmployeePageQueryDTO employeePageQueryDTO);
 
 
-
+  /**
+   * 更新员工信息
+   * @param employee
+   */
   void update(Employee employee);
+
+  /**
+   * 根据id查询员工信息
+   * @param id
+   * @return
+   */
+  @Select("select * from employee where id = #{id}")
+  Employee employeeById(Long id);
 
 //  @Select("select count(*) from employee")
 //  Long total();
