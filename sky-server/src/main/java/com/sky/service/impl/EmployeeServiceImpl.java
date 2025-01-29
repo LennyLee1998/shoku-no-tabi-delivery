@@ -48,6 +48,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employee == null) {
             //账号不存在
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
+        } else if (employee.getStatus() == 0) {
+            throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
 
         //密码比对
@@ -110,5 +112,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         PageResult pageResult = new PageResult(total, result);
         return pageResult;
     }
+
+    @Override
+    public void status(Integer status, Long id) {
+
+        Employee employee = Employee.builder().status(status).id(id).build();
+        employeeMapper.update(employee);
+    }
+
 
 }
