@@ -14,4 +14,8 @@ public interface DishService {
   PageResult page(DishPageQueryDTO dishPageQueryDTO);
 
   void deleteBatch(List<Long> ids);
+
+  DishVO queryDish(Long id);
+
+  void updateDish(DishDTO dishDTO);
 }
