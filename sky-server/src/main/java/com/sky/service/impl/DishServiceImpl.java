@@ -126,18 +126,18 @@ public class DishServiceImpl implements DishService {
 
     //在mapper里面批量删除
     //删除dish
-//    dishMapper.deleteByIds(ids);
+    dishMapper.deleteByIds(ids);
     //删除dish关联的flavor
-//    dishFlavorMapper.deleteByDishIds(ids);
+    dishFlavorMapper.deleteByDishIds(ids);
 
 
     //在mapper里面逐个删除
-    for (Long id : ids) {
+//    for (Long id : ids) {
       //删除dish
-      dishMapper.deleteById(id);
+//      dishMapper.deleteById(id);
       //删除dish关联的flavor - 不需要去查询时候有, 直接尝试去删除即可
-      dishFlavorMapper.deleteByDishId(id);
-    }
+//      dishFlavorMapper.deleteByDishId(id);
+//    }
 
 
   }
