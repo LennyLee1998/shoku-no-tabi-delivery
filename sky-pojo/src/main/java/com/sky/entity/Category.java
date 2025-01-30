@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Category implements Serializable {
 
+    //Java 中用于序列化 (serialization) 的一部分。它的作用是为一个类指定一个唯一的标识符
     private static final long serialVersionUID = 1L;
 
     private Long id;
