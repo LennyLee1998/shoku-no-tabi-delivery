@@ -12,6 +12,7 @@ public class WeChatProperties {
 
     private String appid; //小程序的appid
     private String secret; //小程序的秘钥
+    //下面都是和支付相关的属性
     private String mchid; //商户号
     private String mchSerialNo; //商户API证书的证书序列号
     private String privateKeyFilePath; //商户私钥文件
