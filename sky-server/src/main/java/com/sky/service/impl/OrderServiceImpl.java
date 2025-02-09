@@ -333,4 +333,16 @@ public class OrderServiceImpl implements OrderService {
     orderStatisticsVO.setToBeConfirmed(orderMapper.countByStatus(Orders.TO_BE_CONFIRMED));
     return orderStatisticsVO;
   }
+
+  /**
+   * 接单
+   *
+   * @param ordersConfirmDTO
+   */
+  @Override
+  public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
+    Orders orders = Orders.builder().id(ordersConfirmDTO.getId()).status(Orders.CONFIRMED).build();
+    orderMapper.update(orders);
+  }
+
 }
