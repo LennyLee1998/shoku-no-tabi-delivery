@@ -1,5 +1,6 @@
 package com.sky.controller.user;
 
+import com.sky.dto.DishDTO;
 import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.ShoppingCart;
 import com.sky.result.Result;
@@ -54,6 +55,19 @@ public class ShoppingCartController {
   public Result clean() {
     log.info("清空购物车");
     shoppingCartService.cleanShoppingCart();
+    return Result.success();
+  }
+
+  /**
+   * 删除菜品
+   * @param shoppingCartDTO
+   * @return
+   */
+  @PostMapping("/sub")
+  @ApiOperation("删除菜品")
+  public Result sub(@RequestBody ShoppingCartDTO shoppingCartDTO) {
+    log.info("删除菜品, {}", shoppingCartDTO);
+    shoppingCartService.sub(shoppingCartDTO);
     return Result.success();
   }
 }
