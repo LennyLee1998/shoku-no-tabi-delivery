@@ -91,4 +91,18 @@ public class OrderController {
     return Result.success();
   }
 
+  /**
+   * 取消订单
+   *
+   * @param ordersCancelDTO
+   * @return
+   */
+  @ApiOperation("取消订单")
+  @PutMapping("/cancel")
+  public Result cancel(@RequestBody OrdersCancelDTO ordersCancelDTO) {
+    log.info("取消订单, {}", ordersCancelDTO);
+    orderService.cancel(ordersCancelDTO);
+    return Result.success();
+  }
+
 }
