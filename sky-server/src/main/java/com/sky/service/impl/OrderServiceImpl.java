@@ -232,11 +232,11 @@ public class OrderServiceImpl implements OrderService {
 
     //校验订单是否存在
     if (orderVO == null) {
-      throw  new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+      throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
     }
 
     //订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
-    if (orderVO.getStatus() >  2){
+    if (orderVO.getStatus() > 2) {
       throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
     }
 
@@ -437,6 +437,29 @@ public class OrderServiceImpl implements OrderService {
       throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
     }
     Orders orders = Orders.builder().id(id).status(Orders.DELIVERY_IN_PROGRESS).build();
+    orderMapper.update(orders);
+  }
+
+  /**
+   * 完成订单
+   *
+   * @param id
+   */
+  @Override
+  public void complete(Long id) {
+    // 根据id查询订单
+    OrderVO orderVO = orderMapper.getById(id);
+    // 校验订单是否存在，并且状态为4
+    if (orderVO == null || !Orders.DELIVERY_IN_PROGRESS.equals(orderVO.getStatus())) {
+      throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+    }
+    
+   // 更新订单状态,状态转为完成
+    Orders orders = Orders.builder()
+        .id(id)
+        .status(Orders.COMPLETED)
+        .deliveryTime(LocalDateTime.now())
+        .build();
     orderMapper.update(orders);
   }
 }

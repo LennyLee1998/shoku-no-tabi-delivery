@@ -1,5 +1,6 @@
 package com.sky.controller.admin;
 
+import com.sky.dto.OrdersCancelDTO;
 import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersRejectionDTO;
@@ -7,6 +8,7 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderStatisticsVO;
+import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -117,6 +119,20 @@ public class OrderController {
   public Result delivery(@PathVariable Long id) {
     log.info("派送订单, {}", id);
     orderService.delivery(id);
+    return Result.success();
+  }
+
+  /**
+   * 完成订单
+   *
+   * @param id
+   * @return
+   */
+  @ApiOperation("完成订单")
+  @PutMapping("/complete/{id}")
+  public Result complete(@PathVariable Long id) {
+    log.info("完成订单,{}", id);
+    orderService.complete(id);
     return Result.success();
   }
 }
