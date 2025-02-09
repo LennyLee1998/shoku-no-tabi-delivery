@@ -21,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -280,5 +281,41 @@ public class OrderServiceImpl implements OrderService {
     // 将购物车对象批量添加到数据库
     shoppingCartMapper.insertBatch(shoppingCarts);
   }
-  
+
+
+  //管理端
+
+  /**
+   * 历史订单查询
+   *
+   * @param ordersPageQueryDTO
+   * @return
+   */
+
+  public PageResult conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
+    //使用pagehelper进行分页
+    PageHelper.startPage(ordersPageQueryDTO.getPage(), ordersPageQueryDTO.getPageSize());
+
+    Page<OrderVO> page = orderMapper.list(ordersPageQueryDTO);
+
+    //返回records为orderVO
+    List<OrderVO> orderVOList = page.getResult();
+    //根据id查询orderDetailList
+    if (!CollectionUtils.isEmpty(orderVOList)) {
+      orderVOList.forEach(orderVO -> {
+        List<OrderDetail> orderDetails = orderDetailMapper.getByOrderId(orderVO.getId());
+
+        StringBuilder orderDishes = new StringBuilder();
+        orderDetails.forEach(orderDetail -> {
+          orderDishes.append(orderDetail.getName())
+              .append("*")
+              .append(orderDetail.getNumber())
+              .append("; ");
+        });
+        orderVO.setOrderDishes(orderDishes.toString());
+      });
+    }
+
+    return new PageResult(page.getTotal(), orderVOList);
+  }
 }
