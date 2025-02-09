@@ -318,4 +318,19 @@ public class OrderServiceImpl implements OrderService {
 
     return new PageResult(page.getTotal(), orderVOList);
   }
+
+  /**
+   * 各个状态的订单数量统计
+   *
+   * @return
+   */
+  @Override
+  public OrderStatisticsVO statistics() {
+    OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+    //获取3 4 2状态的数量
+    orderStatisticsVO.setConfirmed(orderMapper.countByStatus(Orders.CONFIRMED));
+    orderStatisticsVO.setDeliveryInProgress(orderMapper.countByStatus(Orders.DELIVERY_IN_PROGRESS));
+    orderStatisticsVO.setToBeConfirmed(orderMapper.countByStatus(Orders.TO_BE_CONFIRMED));
+    return orderStatisticsVO;
+  }
 }
