@@ -453,7 +453,7 @@ public class OrderServiceImpl implements OrderService {
     if (orderVO == null || !Orders.DELIVERY_IN_PROGRESS.equals(orderVO.getStatus())) {
       throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
     }
-    
+
    // 更新订单状态,状态转为完成
     Orders orders = Orders.builder()
         .id(id)
