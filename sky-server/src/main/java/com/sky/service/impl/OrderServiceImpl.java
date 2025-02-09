@@ -345,4 +345,39 @@ public class OrderServiceImpl implements OrderService {
     orderMapper.update(orders);
   }
 
+  /**
+   * 拒单
+   *
+   * @param ordersRejectionDTO
+   */
+  @Override
+  public void rejection(OrdersRejectionDTO ordersRejectionDTO) throws Exception {
+    //根据id查询订单
+    Orders orders = orderMapper.getById(ordersRejectionDTO.getId());
+    //订单只有存在&&status为待接单才可以拒单
+    if (orders == null || Orders.TO_BE_CONFIRMED.equals(orders.getStatus())) {
+      throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+    }
+
+    //支付状态
+    Integer payStatus = orders.getPayStatus();
+    if (Objects.equals(payStatus, Orders.PAID)) {
+      //用户已支付, 需要退款
+//      String refund = weChatPayUtil.refund(
+//          orders.getNumber(),
+//          orders.getNumber(),
+//          new BigDecimal(0.01),
+//          new BigDecimal(0.01));
+//      log.info("申请退款：{}", refund);
+    }
+
+    // 拒单需要退款，根据订单id更新订单状态、拒单原因、取消时间
+    Orders order = Orders.builder()
+        .id(ordersRejectionDTO.getId())
+        .rejectionReason(ordersRejectionDTO.getRejectionReason())
+        .status(Orders.CANCELLED)
+        .cancelTime(LocalDateTime.now())
+        .build();
+    orderMapper.update(order);
+  }
 }
