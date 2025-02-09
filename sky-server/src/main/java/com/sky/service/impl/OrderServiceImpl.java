@@ -15,19 +15,22 @@ import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -166,6 +169,7 @@ public class OrderServiceImpl implements OrderService {
 
   /**
    * 用户端历史订单分页查询
+   *
    * @param pageNum
    * @param pageSize
    * @param status
@@ -218,6 +222,7 @@ public class OrderServiceImpl implements OrderService {
 
   /**
    * 用户取消订单
+   *
    * @param id
    */
   @Override
@@ -257,7 +262,8 @@ public class OrderServiceImpl implements OrderService {
   }
 
   /**
-   * 再来一单
+   * 用户再来一单
+   *
    * @param id
    */
   @Override
@@ -286,7 +292,7 @@ public class OrderServiceImpl implements OrderService {
   //管理端
 
   /**
-   * 历史订单查询
+   * 管理端历史订单查询
    *
    * @param ordersPageQueryDTO
    * @return
@@ -412,5 +418,25 @@ public class OrderServiceImpl implements OrderService {
 
     orderMapper.update(orders);
 
+  }
+
+  /**
+   * 派送订单
+   *
+   * @param id
+   */
+  @Override
+  public void delivery(Long id) {
+    //- 派送订单其实就是将订单状态修改为“派送中”
+    //- 只有状态为“待派送”的订单可以执行派送订单操作
+    // 根据id查询订单
+    OrderVO orderVO = orderMapper.getById(id);
+    // 订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
+    // 校验订单是否存在，并且状态为3
+    if (orderVO == null || !orderVO.getStatus().equals(Orders.CONFIRMED)) {
+      throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+    }
+    Orders orders = Orders.builder().id(id).status(Orders.DELIVERY_IN_PROGRESS).build();
+    orderMapper.update(orders);
   }
 }
