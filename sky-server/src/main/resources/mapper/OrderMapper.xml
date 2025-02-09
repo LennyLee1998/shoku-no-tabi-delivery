@@ -46,4 +46,29 @@
         </set>
         where id = #{id}
     </update>
+
+    <select id="list" resultType="com.sky.vo.OrderVO">
+        select o.*, u.name as userName from orders o left outer join user u on o.user_id = u.id
+        <where>
+            <if test="userId != null">
+                and o.user_id = #{userId}
+            </if>
+            <if test="status != null">
+                and o.status = #{status}
+            </if>
+            <if test="number != null and number!=''">
+                and o.number like concat('%', #{number}, '%')
+            </if>
+            <if test="phone != null and phone!=''">
+                and o.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="beginTime != null">
+                and o.begin_time = #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and o.end_time= #{endTime}
+            </if>
+        </where>
+        order by order_time desc
+    </select>
 </mapper>
