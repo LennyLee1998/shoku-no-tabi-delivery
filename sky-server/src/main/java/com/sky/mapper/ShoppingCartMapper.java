@@ -29,11 +29,11 @@ public interface ShoppingCartMapper {
   void updateById(ShoppingCart cart);
 
   /**
-   *
-   * @param shoppingCart
+   * 批量添加购物车
+   * @param shoppingCarts
    */
-  @Insert("insert into shopping_cart (name, image, user_id, dish_id, setmeal_id, dish_flavor, amount, create_time) values (#{name}, #{image}, #{userId}, #{dishId}, #{setmealId}, #{dishFlavor}, #{amount}, #{createTime})")
-  void insert(ShoppingCart shoppingCart);
+
+  void insertBatch(List<ShoppingCart> shoppingCarts);
 
   /**
    * 根据用户id删除购物车

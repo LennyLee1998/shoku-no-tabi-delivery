@@ -70,7 +70,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
       shoppingCart.setNumber(1);
       shoppingCart.setCreateTime(LocalDateTime.now());
-      shoppingCartMapper.insert(shoppingCart);
+      List<ShoppingCart> shoppingCarts = List.of(shoppingCart);
+      shoppingCartMapper.insertBatch(shoppingCarts);
     }
 
 
