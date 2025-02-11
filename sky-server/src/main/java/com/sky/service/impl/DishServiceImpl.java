@@ -196,6 +196,13 @@ public class DishServiceImpl implements DishService {
 
   }
 
+
+  @Override
+  public void startOrStop(Integer status, Long id) {
+    Dish dish = Dish.builder().id(id).status(status).build();
+    dishMapper.update(dish);
+  }
+  
   /**
    * 根据分类id查询菜品
    * @param categoryId
@@ -212,5 +219,6 @@ public class DishServiceImpl implements DishService {
         .status(StatusConstant.ENABLE)
         .build();
     return dishMapper.getByCategoryId(dish);
+
   }
 }

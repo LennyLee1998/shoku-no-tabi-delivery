@@ -91,15 +91,17 @@ public class DishController {
   }
 
   /**
-   * 根据分类id查询菜品
-   * @param categoryId
+   * 启用、禁用菜品
+   * @param status
+   * @param id
    * @return
    */
-  @ApiOperation("根据分类id查询菜品")
-  @GetMapping("/list")
-  public Result<List<Dish>> listByCategoryId(Long categoryId) {
-    log.info("根据分类id查询菜品: {}", categoryId);
-    List<Dish> dishList = dishService.getByCategoryId(categoryId);
-    return Result.success(dishList);
+  @PostMapping("/status/{status}")
+  @ApiOperation("启用禁用菜品")
+  public Result<String> startOrStop(@PathVariable("status") Integer status, Long id){
+    dishService.startOrStop(status,id);
+    return Result.success();
   }
+
 }
+
