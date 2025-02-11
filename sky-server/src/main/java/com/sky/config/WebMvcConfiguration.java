@@ -27,49 +27,74 @@ import java.util.List;
 @Slf4j
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
-    @Autowired
-    private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+  @Autowired
+  private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
 
-    /**
-     * 注册自定义拦截器
-     *
-     * @param registry
-     */
-    protected void addInterceptors(InterceptorRegistry registry) {
-        log.info("开始注册自定义拦截器...");
-        registry.addInterceptor(jwtTokenAdminInterceptor)
-                .addPathPatterns("/admin/**")
-                .excludePathPatterns("/admin/employee/login");
-    }
+  /**
+   * 注册自定义拦截器
+   *
+   * @param registry
+   */
+  protected void addInterceptors(InterceptorRegistry registry) {
+    log.info("开始注册自定义拦截器...");
+    registry.addInterceptor(jwtTokenAdminInterceptor)
+        .addPathPatterns("/admin/**")
+        .excludePathPatterns("/admin/employee/login");
+  }
 
-    /**
-     * 通过knife4j生成接口文档
-     * @return
-     */
-    @Bean
-    public Docket docket() {
-        ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("苍穹外卖项目接口文档")
-                .version("2.0")
-                .description("苍穹外卖项目接口文档")
-                .build();
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sky.controller"))
-                .paths(PathSelectors.any())
-                .build();
-        return docket;
-    }
+  /**
+   * 通过knife4j生成接口文档
+   *
+   * @return
+   */
+  @Bean
+  public Docket docket1() {
+    ApiInfo apiInfo = new ApiInfoBuilder()
+        .title("苍穹外卖项目接口文档")
+        .version("2.0")
+        .description("苍穹外卖项目接口文档")
+        .build();
+    Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        .groupName("管理端接口")
+        .apiInfo(apiInfo)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.sky.controller.admin"))
+        .paths(PathSelectors.any())
+        .build();
+    return docket;
+  }
 
-    /**
-     * 设置静态资源映射
-     * @param registry
-     */
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
+  /**
+   * 通过knife4j生成接口文档
+   *
+   * @return
+   */
+  @Bean
+  public Docket docket2() {
+    ApiInfo apiInfo = new ApiInfoBuilder()
+        .title("苍穹外卖项目接口文档")
+        .version("2.0")
+        .description("苍穹外卖项目接口文档")
+        .build();
+    Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        .groupName("用户端接口")
+        .apiInfo(apiInfo)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.sky.controller.user"))
+        .paths(PathSelectors.any())
+        .build();
+    return docket;
+  }
+
+  /**
+   * 设置静态资源映射
+   *
+   * @param registry
+   */
+  protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
+    registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+  }
 
     /**
      * 扩展springmvc框架的消息转化器
@@ -85,4 +110,5 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         //将自己的消息转化器加入容器中
         converters.add(0, converter);
     }
+
 }

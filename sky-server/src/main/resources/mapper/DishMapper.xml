@@ -3,11 +3,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.DishMapper">
 
-<!--    insert语句执行完以后产生的主键值会赋值给dish的id属性-->
+<!--    insert语句执行完以后产生的主键值会赋值给传入参数的dish的id属性, 并和service中的dish中-->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-        insert into dish  (name, category_id, price, image, description, create_time, update_time, create_user, update_user,status)
-            values
-        (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, #{status})
+        insert into dish (name, category_id, price, image, description, create_time, update_time, create_user,
+                          update_user, status)
+        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime}, #{updateTime}, #{createUser},
+                #{updateUser}, #{status})
     </insert>
 
     <update id="update" parameterType="com.sky.entity.Dish">
@@ -62,6 +63,21 @@
             </if>
         </where>
          order by d.create_time desc
+    </select>
+    <select id="getByCategoryId" resultType="com.sky.entity.Dish">
+        select * from dish
+        <where>
+             <if test="name != null">
+                 name like concat('%', #{name}, '%')
+             </if>
+             <if test="categoryId != null">
+                 and category_id = #{categoryId}
+             </if>
+             <if test="status != null">
+                 and status = #{status}
+             </if>
+        </where>
+        order by create_time desc
     </select>
 
 
