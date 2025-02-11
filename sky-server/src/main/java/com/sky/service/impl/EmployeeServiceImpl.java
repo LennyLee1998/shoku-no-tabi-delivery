@@ -54,7 +54,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         //密码比对
-        //  后期需要进行md5加密，然后再进行比对
         password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(employee.getPassword())) {
             //密码错误
