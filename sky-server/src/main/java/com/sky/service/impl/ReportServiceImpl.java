@@ -2,8 +2,10 @@ package com.sky.service.impl;
 
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
+import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -22,6 +24,8 @@ public class ReportServiceImpl implements ReportService {
 
   @Autowired
   private OrderMapper orderMapper;
+  @Autowired
+  private UserMapper userMapper;
 
   /**
    * 统计指定时间区间内的营业额数据
@@ -66,6 +70,54 @@ public class ReportServiceImpl implements ReportService {
         .builder()
         .dateList(dateStr)
         .turnoverList(turnoverStr)
+        .build();
+  }
+
+  /**
+   * 统计指定时间区间内的用户数据
+   * @param begin
+   * @param end
+   * @return
+   */
+  public UserReportVO getuserStatistics(LocalDate begin, LocalDate end) {
+    //得到dateList
+    List<LocalDate> localDateList = new ArrayList<>();
+    localDateList.add(begin);
+    while (!begin.equals(end)) {
+      begin = begin.plusDays(1);
+      localDateList.add(begin);
+    }
+    String localDateStr = StringUtils.join(localDateList, ",");
+
+    List<Integer> newUserList = new ArrayList<>();
+    List<Integer> totalUserList = new ArrayList<>();
+
+    //遍历localDateList
+    localDateList.forEach(localDate -> {
+      //把localDate转成localdatetime
+      LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
+      LocalDateTime endTime = LocalDateTime.of(localDate, LocalTime.MAX);
+
+      //计算newUser
+      Map map = new HashMap();
+      map.put("end", endTime);
+
+      //得到totalUser
+      Integer totalUser = userMapper.countByMap(map);
+      totalUserList.add(totalUser);
+
+      map.put("begin", beginTime);
+      Integer newUser = userMapper.countByMap(map);
+      newUserList.add(newUser);
+
+    });
+    String newUserStr = StringUtils.join(newUserList, ",");
+    String totalUserStr = StringUtils.join(totalUserList, ",");
+
+    return UserReportVO.builder()
+        .dateList(localDateStr)
+        .newUserList(newUserStr)
+        .totalUserList(totalUserStr)
         .build();
   }
 }
