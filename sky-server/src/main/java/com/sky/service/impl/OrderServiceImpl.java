@@ -373,7 +373,7 @@ public class OrderServiceImpl implements OrderService {
     //根据id查询订单
     Orders orders = orderMapper.getById(ordersRejectionDTO.getId());
     //订单只有存在&&status为待接单才可以拒单
-    if (orders == null || Orders.TO_BE_CONFIRMED.equals(orders.getStatus())) {
+    if (orders == null || !Orders.TO_BE_CONFIRMED.equals(orders.getStatus())) {
       throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
     }
 
