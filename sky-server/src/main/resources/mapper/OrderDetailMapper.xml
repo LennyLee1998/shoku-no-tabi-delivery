@@ -13,4 +13,14 @@
             #{od.amount}, #{od.number})
         </foreach>
     </insert>
+
+    <select id="countByMap">
+        select count(dish_id), count(setmeal_id) from order_detail
+        <where>
+            <if test="begin != null">
+
+            </if>
+        </where>
+    </select>
+
 </mapper>
